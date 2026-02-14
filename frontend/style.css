@@ -145,6 +145,7 @@ button {
     text-align: left;
     max-height: 150px;
     overflow-y: auto;
+<<<<<<< HEAD
 }
 
 /* Map container styles */
@@ -163,4 +164,6 @@ button {
     color: #666;
     margin-bottom: 5px;
     padding-left: 5px;
+=======
+>>>>>>> f580b567a12e3c1c4f4a0023fdc2fe5257817082
 }
