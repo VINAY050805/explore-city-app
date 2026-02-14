@@ -27,6 +27,7 @@ A full-stack web application for exploring city attractions with favorites and r
 
 ## 📁 Project Structure
 
+```bash
 explore-city-app/
 │
 ├── backend/
@@ -51,6 +52,8 @@ explore-city-app/
 │
 ├── run.py
 └── README.md
+```
+
 
 ---
 
