@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Favorites</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .favorites-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            padding: 20px;
+        }
+        .favorite-card {
+            width: 230px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: 0.3s;
+            position: relative;
+        }
+        .favorite-card:hover {
+            transform: translateY(-8px);
+        }
+        .favorite-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .favorite-card h3 {
+            padding: 10px;
+            margin: 0;
+        }
+        .favorite-card button {
+            margin: 10px;
+            padding: 8px 12px;
+            background: #ff4444;
+            border: none;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .back-btn {
+            margin: 20px;
+            padding: 10px 20px;
+            background: #2b7cff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .back-btn:hover {
+            background: #1a5fd0;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Favorite Places ⭐</h1>
+    <a href="index.html" class="back-btn">← Back to Home</a>
+    <div id="favorites" class="favorites-container"></div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000';
+
+        async function loadFavorites() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/favorites`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const favorites = await response.json();
+                
+                const container = document.getElementById('favorites');
+                
+                if (favorites.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; width: 100%;">No favorites yet. Go back and add some!</p>';
+                    return;
+                }
+                
+                container.innerHTML = favorites.map(place => `
+                    <div class="favorite-card">
+                        <img src="${place.image}" alt="${place.name}" onerror="this.src='https://via.placeholder.com/230x150'">
+                        <h3>${place.name}</h3>
+                        <p style="padding: 0 10px;">${place.category}</p>
+                        <button onclick="removeFromFavorites(${place.id})">Remove ⭐</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading favorites:', error);
+                document.getElementById('favorites').innerHTML = '<p style="text-align: center; color: red;">Error loading favorites. Make sure the backend server is running.</p>';
+            }
+        }
+
+        async function removeFromFavorites(placeId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/favorites/${placeId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadFavorites(); // Reload the favorites list
+                } else {
+                    alert('Error removing from favorites');
+                }
+            } catch (error) {
+                console.error('Error removing favorite:', error);
+                alert('Error removing from favorites');
+            }
+        }
+
+        loadFavorites();
+    </script>
+</body>
+</html>
